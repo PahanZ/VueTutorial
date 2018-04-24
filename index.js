@@ -12,12 +12,22 @@ new Vue({
         cars,
         car: cars[0],
         selectedCarIndex: 0,
-        phoneVisibility: false
+        phoneVisibility: false,
+        search: '',
+        modalVisible: false
     },
     methods: {
         selectCar: function(index) {
             this.car = cars[index];
             this.selectedCarIndex = index;
+        }
+    },
+    computed: {
+        phoneBtnText() {
+            return this.phoneVisibility ? 'Hide phone' : 'Show phone';
+        },
+        filteredCars() {
+            return this.cars.filter(el => el.name.indexOf(this.search) > -1 || el.model.indexOf(this.search) > -1)
         }
     }
 })

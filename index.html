@@ -56,7 +56,9 @@
                             <li>Owner-<strong>{{ car.owner }}</strong></li>
                          </ul>
                          <div class="phone-block">
-                            <p v-if="phoneVisibility">{{ car.phone }}</p>
+                             <transition name="phone">
+                                <p v-if="phoneVisibility">{{ car.phone }}</p>
+                             </transition>                            
                          </div>                         
                          <button 
                          class="btn btn-outline-success mr-3"
@@ -71,7 +73,24 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade show" 
+        <div class="row pt-3" v-if="logs.length !== 0">
+            <div class="col-md-12">
+                <ul class="list-group">
+                    <li 
+                        class="list-group-item list-group-item-secondary"
+                        v-for="log in logs"
+                        :class="{
+                             'list-group-item-secondary': log.type === 'Cansel',
+                             'list-group-item-success': log.type === 'OK'
+                        }"
+                    >
+                        {{ log.text }} {{ log.date | date }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <transition name="modal">
+            <div class="modal fade show" 
             tabindex="-1" 
             role="dialog"
             v-if="modalVisible">
@@ -90,22 +109,44 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>Modal body text goes here.</p>
+                        <p>
+                            <strong> Current car {{ car.name }}</strong>
+                        </p>
+                        <ul>
+                            <li>Model-
+                                <strong>{{ car.model }}</strong>
+                            </li>
+                            <li>Year-
+                                <strong>{{ car.year }}</strong>
+                            </li>
+                            <li>Owner-
+                                <strong>{{ car.owner }}</strong>
+                            </li>
+                        </ul>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button 
+                            type="button" 
+                            class="btn btn-primary"
+                            @click="newOrder"
+                        >
+                            Buy
+                        </button>
                         <button 
                             type="button" 
                             class="btn btn-secondary" 
                             data-dismiss="modal"
-                            @click="modalVisible = false"
-                        >Close                            
+                            @click="cancelOrder"
+                        >Cansel                            
                         </button>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="modal-backdrop fade show" v-if="modalVisible"></div>
+            </div>
+        </transition>
+        <transition name="fade">
+            <div class="modal-backdrop fade show" v-if="modalVisible"></div>
+        </transition>       
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
